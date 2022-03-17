@@ -1,11 +1,14 @@
 <template>
   <v-app dark>
+    <!-- section navbar -->
     <navigation-bar @c-on-click="drawerHanlder" :title="title" />
 
-    <v-navigation-drawer v-model="drawer" fixed app absolute clipped>
+    <!-- section drawer -->
+    <v-navigation-drawer v-model="drawer" fixed app clipped>
       <navigation-drawer :drawer="drawer" :data="items" />
     </v-navigation-drawer>
 
+    <!-- section main -->
     <v-main>
       <v-container>
         <Nuxt />
@@ -15,27 +18,25 @@
 </template>
 
 <script>
-import NavigationBar from "@layouts/NavigationBar";
-import NavigationDrawer from "@layouts/NavigationDrawer";
+import NavigationBar from "./NavigationBar.vue";
+import NavigationDrawer from "./NavigationDrawer.vue";
 
 export default {
   components: { NavigationBar, NavigationDrawer },
   name: "DefaultLayout",
   data() {
     return {
-      clipped: false,
       drawer: false,
-      fixed: false,
-      title: "Vuetify.js",
+      title: "Dashboard Monitoring Upload",
       items: [
         {
-          icon: "mdi-apps",
-          title: "Welcome",
+          icon: "mdi-home-outline",
+          title: "Beranda",
           to: "/",
         },
         {
-          icon: "mdi-chart-bubble",
-          title: "Inspire",
+          icon: "mdi-logout-variant",
+          title: "Log Out",
           to: "/inspire",
         },
       ],
