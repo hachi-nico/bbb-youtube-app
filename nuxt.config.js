@@ -57,4 +57,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  // dir alias
+  alias: {
+    "@components": resolve(__dirname, "./components"),
+    "@layouts": resolve(__dirname, "./layouts"),
+  },
 };
