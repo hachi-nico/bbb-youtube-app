@@ -62,5 +62,6 @@ export default {
   alias: {
     "@components": resolve(__dirname, "./components"),
     "@layouts": resolve(__dirname, "./layouts"),
+    "@config": resolve(__dirname, "./config"),
   },
 };

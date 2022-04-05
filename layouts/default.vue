@@ -36,7 +36,7 @@ export default {
         },
         {
           icon: "mdi-logout-variant",
-          title: "Log Out",
+          title: "Keluar",
           to: "/inspire",
         },
       ],
