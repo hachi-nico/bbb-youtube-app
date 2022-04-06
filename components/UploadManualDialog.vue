@@ -40,17 +40,29 @@
 
 <script>
 import { httpClient } from "@config/httpClient.js";
+import axios from "axios";
 
 export default {
   name: "UploadManualDialog",
   data() {
     return {
       dialog: false,
+      params: {
+        name: "nico",
+      },
     };
   },
   async mounted() {
-    const res = await httpClient("get", "https://api.nuxtjs.dev/posts", "multipart/form-data", "");
-    console.log(res);
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/v1/youtube/upload",
+        this.params,
+        { "Content-Type": "application/json" }
+      );
+      console.log(res, "ini res");
+    } catch (err) {
+      console.log(err, "ini err");
+    }
   },
 };
 </script>
