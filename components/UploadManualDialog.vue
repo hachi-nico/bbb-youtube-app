@@ -15,7 +15,17 @@
         Upload Manual
       </v-btn>
     </template>
-    <v-card>
+    <v-card class="pt-2">
+      <global-alert
+        :title="
+          error
+            ? 'Internal Error - Silahkan coba lagi'
+            : 'Berhasil Upload Manual'
+        "
+        :type="error ? 'error' : 'success'"
+        v-show="error || success"
+        class="mx-5"
+      />
       <v-card-title>
         <span class="text-h5">Upload file video manual ke Youtube</span>
       </v-card-title>
@@ -25,44 +35,85 @@
           label="File video"
           prepend-icon="mdi-folder-play"
         ></v-file-input>
-        <v-text-field label="Nama File" required></v-text-field>
+        <v-text-field v-model="namaFile" label="Nama File"></v-text-field>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="dialog = false">
-          Tutup
+        <v-btn
+          class="px-5 py-5"
+          color="error"
+          @click="
+            () => {
+              dialog = false;
+              resetAlertState();
+            }
+          "
+          dark
+        >
+          Kembali
         </v-btn>
-        <v-btn color="blue darken-1" text @click="dialog = false">Simpan</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          class="px-5 py-5"
+          color="success"
+          v-show="loading == false"
+          @click="uploadHandler"
+          :disabled="loading == true"
+        >
+          Upload
+        </v-btn>
       </v-card-actions>
+      <v-progress-linear
+        indeterminate
+        color="primary"
+        v-show="loading"
+      ></v-progress-linear>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { httpClient } from "@config/httpClient.js";
 import axios from "axios";
+import GlobalAlert from "@components/GlobalAlert";
 
 export default {
-  name: "UploadManualDialog",
+  components: { GlobalAlert },
   data() {
     return {
+      // app state
       dialog: false,
-      params: {
-        name: "nico",
-      },
+      loading: false,
+      error: false,
+      success: false,
+
+      // params
+      namaFile: "",
     };
   },
-  async mounted() {
-    try {
-      const res = await axios.post(
-        "http://localhost:3001/v1/youtube/upload",
-        this.params,
-        { "Content-Type": "application/json" }
-      );
-      console.log(res, "ini res");
-    } catch (err) {
-      console.log(err, "ini err");
-    }
+  methods: {
+    resetAlertState() {
+      this.error = false;
+      this.success = false;
+    },
+    async uploadHandler() {
+      try {
+        this.loading = true;
+        const res = await axios.post(
+          "http://localhost:3001/v1/youtube/upload",
+          new URLSearchParams({ namaFile: this.namaFile }),
+          {
+            "Content-Type": "application/x-www-form-urlencoded",
+          }
+        );
+        this.loading = false;
+        this.success = true;
+        console.log(res);
+      } catch (err) {
+        console.log(this.error);
+        this.loading = false;
+        this.error = true;
+        console.log(err.response.data);
+      }
+    },
   },
 };
 </script>
