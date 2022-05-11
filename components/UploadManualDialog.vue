@@ -34,6 +34,7 @@
           show-size
           label="File video"
           prepend-icon="mdi-folder-play"
+          v-model="chosenFile"
         ></v-file-input>
         <v-text-field v-model="namaFile" label="Nama File"></v-text-field>
       </v-card-text>
@@ -84,6 +85,7 @@ export default {
       loading: false,
       error: false,
       success: false,
+      chosenFile: null,
 
       // params
       namaFile: "",
@@ -96,17 +98,23 @@ export default {
     },
     async uploadHandler() {
       try {
+        const form_data = new FormData();
+        form_data.append("file", this.chosenFile);
+        form_data.append("namaFile", this.namaFile);
+
         this.loading = true;
         const res = await axios.post(
           "http://localhost:3001/v1/youtube/upload",
-          new URLSearchParams({ namaFile: this.namaFile }),
+          form_data,
           {
-            "Content-Type": "application/x-www-form-urlencoded",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
         this.loading = false;
         this.success = true;
-        console.log(res);
+        // console.log(res);
       } catch (err) {
         console.log(this.error);
         this.loading = false;
